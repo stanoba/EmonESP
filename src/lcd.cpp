@@ -13,6 +13,7 @@ void lcd_setup()
   String nodename = node_name.c_str();
   String cfw = ESCAPEQUOTE(BUILD_TAG);
   u8g2.begin();
+  u8g2.setContrast(5); // 0..255
   u8g2.setFont(u8g2_font_t0_11_mr);
   u8g2.clearBuffer();
   u8g2.setCursor(5, 15);
@@ -36,15 +37,26 @@ void lcd_display(JsonDocument &json)
   int linehight = 12;
   int shift = 0;
   String vrms = jsonobj["vrms"];
-  String power = jsonobj["power"];
-  String ct1 = jsonobj["ct1"];
-  String ct2 = jsonobj["ct2"];
-  String ct3 = jsonobj["ct3"];
+  int L1 = jsonobj["ct1"];
+  int L2 = jsonobj["ct2"];
+  int L3 = jsonobj["ct3"];
+  float temp = jsonobj["t0"];
+  int power = L1 + L2 + L3;
+
   u8g2.clearBuffer();
   shift = shift + linehight; u8g2.setCursor(0, shift);
   u8g2.print("Vrms: " + vrms + "V");
+
+  if (temp!=300 and temp!=0) {
+    char str[4];
+    dtostrf(temp, 3, 1, str);
+
+    u8g2.setCursor(70, shift);
+    u8g2.print("T:" + String(str) + "C");
+  }
+
   shift = shift + linehight; u8g2.setCursor(0, shift);
-  u8g2.print("Power: " + power + "W");
+  u8g2.print("Total Power: " + String(power) + "W");
   shift = shift + linehight; u8g2.setCursor(0, shift);
   u8g2.print("L1:");
   u8g2.setCursor(40, shift);
@@ -52,11 +64,11 @@ void lcd_display(JsonDocument &json)
   u8g2.setCursor(80, shift);
   u8g2.print("L3:");
   shift = shift + linehight; u8g2.setCursor(0, shift);
-  u8g2.print(ct1+"W");
+  u8g2.print(String(L1)+"W");
   u8g2.setCursor(40, shift);
-  u8g2.print(ct2+"W");
+  u8g2.print(String(L2)+"W");
   u8g2.setCursor(80, shift);
-  u8g2.print(ct3+"W");
+  u8g2.print(String(L3)+"W");
 
   shift = shift + linehight; u8g2.setCursor(0, shift);
   u8g2.print("IP: " + ipaddress);
