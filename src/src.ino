@@ -34,6 +34,7 @@
 #include "http.h"
 #include "autoauth.h"
 #include <NTPClient.h>
+#include "lcd.h"
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP,"europe.pool.ntp.org",time_offset,60000);
@@ -114,6 +115,9 @@ void setup() {
   delay(100);
 
   start_mem = last_mem = ESP.getFreeHeap();
+
+  lcd_setup();
+  
 } // end setup
 
 void led_flash(int ton, int toff) {
@@ -145,6 +149,11 @@ void loop()
 
   StaticJsonDocument<512> data;
   boolean gotInput = input_get(data);
+
+
+  if(gotInput) {
+    lcd_display(data); // senda data to LCD
+  }
 
   if (wifi_client_connected())
   {
