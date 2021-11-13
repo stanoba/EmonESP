@@ -1,4 +1,4 @@
-# EmonESP
+# EmonESP - OLED display implementation (SH1106)
 
 [![Build Status](https://travis-ci.org/openenergymonitor/EmonESP.svg?branch=master)](https://travis-ci.org/openenergymonitor/EmonESP)
 
